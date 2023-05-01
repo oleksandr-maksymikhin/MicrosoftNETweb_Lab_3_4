@@ -1,0 +1,80 @@
+﻿@model IEnumerable<TicketViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>@ViewBag.MovieTitle</h2>
+
+<table class="table table-striped">
+    <tr>
+        <th class="d-none">
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th class="d-none">
+            @Html.DisplayNameFor(model => model.MovieId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SalePrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Row)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Seat)
+        </th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="d-none">
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td class="d-none">
+                @Html.DisplayFor(modelItem => item.MovieId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SalePrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Row)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Seat)
+            </td>
+            <td>
+                @if (item.Status == "sold")
+                {
+                    <a class="btn btn-danger" disabled>Sold</a>
+                }
+                else if (item.Status == "booked")
+                {
+                    <a class="btn btn-warning" disabled>Book</a>
+                    <a asp-action="BuyTicket" asp-route-ticketId="@item.Id" class="btn btn-success">Buy</a>
+                }
+                else
+                {
+                    <a asp-action="BookTicket" asp-route-ticketId="@item.Id" class="btn btn-success">Book</a>
+                    <a asp-action="BuyTicket" asp-route-ticketId="@item.Id" class="btn btn-success">Buy</a>
+                }
+
+            </td>
+        </tr>
+    }
+
+</table>
+<a asp-controller="Movies" asp-action="Index" class="btn btn-light border-info text-info">&larr;Back to movies</a>
+

@@ -1,0 +1,137 @@
+﻿@*@model IEnumerable<IndexMovieViewModel>*@
+@model IndexMovieViewModel
+
+@{
+    ViewBag.Title = "Movies";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form method="get" class="form-inline d-flex justify-content-between">
+    <div class="d-inline float-left">
+        <input type="text" name="search" value="@ViewBag.SearchValue" />
+        <input type="submit" value="Search" class="btn btn-secondary btn-sm" />
+    </div>
+    <div class="d-inline  float-right">
+        <span class="d-inline">per page:</span>
+        <select name="pageSize" asp-route-pageSize="@(Model.MoviePageViewModel.PageSize)" class="d-inline">
+            @for(int i=3; i<10; i++)
+            {
+                if (i == Model.MoviePageViewModel.PageSize)
+                {
+                    <option selected>@i</option>
+                }
+                else
+                { 
+                    <option>@i</option>
+                }
+            }
+        </select>
+        <input type="submit" value="Apply" class="btn btn-secondary btn-sm" />
+    </div>
+</form>
+<table class="table">
+    <tr>
+        <th class="d-none">
+            Poster
+        </th>
+        <th class="d-none">
+            Id
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.MovieSortViewModel.TitleSort)"
+               asp-route-search="@(Model.MovieFilterViewModel.Search)"
+               asp-route-pageSize="@(Model.MoviePageViewModel.PageSize)">
+                Title
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.MovieSortViewModel.DirectorSort)"
+               asp-route-search="@(Model.MovieFilterViewModel.Search)"
+               asp-route-pageSize="@(Model.MoviePageViewModel.PageSize)">
+                Director
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.MovieSortViewModel.GenreSort)"
+               asp-route-search="@(Model.MovieFilterViewModel.Search)"
+               asp-route-pageSize="@(Model.MoviePageViewModel.PageSize)">
+                Genre
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.MovieSortViewModel.DateSort)"
+               asp-route-search="@(Model.MovieFilterViewModel.Search)"
+               asp-route-pageSize="@(Model.MoviePageViewModel.PageSize)">
+                Date
+            </a>
+        </th>
+        <th></th>
+    </tr>
+    @foreach(var item in Model.Movies)
+    {
+        <tr>
+            <td class="d-none">
+                @Html.DisplayFor(modelItem => item.Poster)
+            </td>
+            <td class="d-none">
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Director)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre)
+            </td>
+            <td>
+                @*@Html.DisplayFor(modelItem => item.Date)*@
+                @item.Date.ToShortDateString()
+            </td>
+            <td>
+                <a asp-controller="Tickets" asp-action="IndexByMovieId" asp-route-id="@item.Id" class="btn btn-success">Tickets</a>
+            </td>
+        </tr>
+    }
+</table>
+
+
+<p>
+    @*previous page*@
+    @if(Model.MoviePageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+            asp-route-page="@(Model.MoviePageViewModel.PageNumber - 1)"
+            asp-route-search="@(Model.MovieFilterViewModel.Search)"
+            asp-route-sortOrder="@Model.MovieSortViewModel.Current"
+            asp-route-pageSize="@(Model.MoviePageViewModel.PageSize)"
+           class="text-info">
+            &laquo;Previous
+           @* @(Model.MoviePageViewModel.PageNumber - 1);&larr*@
+        </a>
+    }
+    @*current page*@
+    <a class="text-info font-weight-bold" disabled>
+        &nbsp;&nbsp;@(Model.MoviePageViewModel.PageNumber) &nbsp;&nbsp
+    </a>
+    @*next page*@
+    @if(Model.MoviePageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+            asp-route-page="@(Model.MoviePageViewModel.PageNumber + 1)"
+            asp-route-search="@(Model.MovieFilterViewModel.Search)"
+            asp-route-sortOrder="@Model.MovieSortViewModel.Current"
+            asp-route-pageSize="@(Model.MoviePageViewModel.PageSize)"
+            class="text-info">
+            Next&raquo
+          @* &rarr;@(Model.MoviePageViewModel.PageNumber + 1)*@
+        </a>
+    }
+</p>
+
